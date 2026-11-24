@@ -1,0 +1,101 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import Icon from "./Icon";
+import { EMAIL, LOGO, PHONE_1, PHONE_2, PRODUCTS } from "@/lib/content";
+
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, "") : p);
+
+export default function Header() {
+  const path = norm(usePathname() || "/");
+  const [open, setOpen] = useState(false);
+  const [sub, setSub] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const subRef = useRef<HTMLLIElement>(null);
+
+  const setHdr = () => {
+    if (headerRef.current)
+      document.documentElement.style.setProperty("--hdr", headerRef.current.offsetHeight + "px");
+  };
+
+  useEffect(() => {
+    setHdr();
+    window.addEventListener("resize", setHdr);
+    const onDoc = (e: MouseEvent) => {
+      if (subRef.current && !subRef.current.contains(e.target as Node) && window.innerWidth > 960) setSub(false);
+    };
+    document.addEventListener("click", onDoc);
+    return () => {
+      window.removeEventListener("resize", setHdr);
+      document.removeEventListener("click", onDoc);
+    };
+  }, []);
+
+  // close menu on navigation
+  useEffect(() => {
+    setOpen(false);
+    setSub(false);
+  }, [path]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const cur = (href: string) => (norm(href) === path ? ({ "aria-current": "page" } as const) : {});
+  const productActive = PRODUCTS.some((p) => norm(p.href) === path);
+
+  return (
+    <header className="site-header" ref={headerRef}>
+      <div className="topbar">
+        <div className="wrap">
+          <a href={`tel:${PHONE_1}`}><Icon name="phone" size={14} /> 080-41698199</a>
+          <a href={`tel:${PHONE_2}`}>+91-98802 71555</a>
+          <a href={`mailto:${EMAIL}`}><Icon name="mail" size={14} /> {EMAIL}</a>
+        </div>
+      </div>
+      <div className="wrap bar">
+        <Link className="brand" href="/">
+          <Image src={LOGO} alt="Mrinaal Technologies" width={180} height={100} priority />
+        </Link>
+        <button
+          className="burger"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="nav"
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span /><span /><span />
+        </button>
+        <nav id="nav" aria-label="Main" className={open ? "open" : ""}>
+          <ul>
+            <li><Link href="/" {...cur("/")}>Home</Link></li>
+            <li><Link href="/about-us" {...cur("/about-us")}>About us</Link></li>
+            <li ref={subRef} className={`has-sub${sub ? " open" : ""}${productActive ? " is-active" : ""}`}>
+              <button className="sub-toggle" aria-expanded={sub} onClick={() => setSub((s) => !s)}>
+                Products &amp; Solutions
+                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                  <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                </svg>
+              </button>
+              <ul className="sub">
+                {PRODUCTS.map((p) => (
+                  <li key={p.href}><Link href={p.href} {...cur(p.href)}>{p.label}</Link></li>
+                ))}
+              </ul>
+            </li>
+            <li><Link href="/gallery" {...cur("/gallery")}>Gallery</Link></li>
+            <li><Link href="/enquiry" {...cur("/enquiry")}>Enquiry</Link></li>
+            <li><Link href="/contact-us" {...cur("/contact-us")}>Contact Us</Link></li>
+          </ul>
+          <Link className="btn btn-accent nav-cta" href="/enquiry">Enquire Now</Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
