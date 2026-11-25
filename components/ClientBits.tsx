@@ -51,15 +51,20 @@ export function Stats({ items }: { items: Stat[] }) {
   const fmt = (i: number) => `${vals[i]}${items[i].suffix ?? "+"}`;
   // circle centres along the road; alternate step numbers above / below
   const xs = [135, 370, 605, 840];
+  // The road is one half-circle per milestone (radius = half the spacing), alternating
+  // under / over each circle, so every joint meets with the same vertical tangent.
+  const R = (xs[1] - xs[0]) / 2;
   const road =
-    "M30 150c0 0 0 105 105 105s105-105 117-105 0-105 118-105 117 105 117 105 0 105 118 105 117-105 117-105 0-105 118-105 117 105 117 105";
+    `M${xs[0] - R} 128 L${xs[0] - R} 150 ` +
+    xs.map((x, i) => `A${R} ${R} 0 0 ${i % 2} ${x + R} 150`).join(" ") +
+    ` L${xs[xs.length - 1] + R} 172`;
 
   return (
     <div ref={ref}>
       <div className="wave">
         <svg viewBox="0 0 980 300" role="img" aria-label={items.map((it, i) => `${fmt(i)} ${it.label}`).join(", ")}>
           <g fill="#fff" stroke="#e3e9f2" strokeWidth="10">
-            {xs.map((x) => <circle key={x} cx={x} cy="150" r="92" />)}
+            {xs.map((x) => <circle key={x} cx={x} cy="150" r="88" />)}
           </g>
           <path d={road} stroke="#0b2447" strokeWidth="34" fill="none" strokeLinecap="round" />
           <path d={road} stroke="#4a6a96" strokeWidth="2" strokeDasharray="8 8" fill="none" />
