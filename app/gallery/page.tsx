@@ -8,10 +8,12 @@ export const metadata: Metadata = { title: "Gallery", description: "Project phot
 export default function GalleryPage() {
   return (
     <>
-      <PageHero kicker={BANNER} title="Gallery" />
-      <section className="section">
+      <PageHero title="Gallery" sub={BANNER} crumbs={[{ label: "Gallery" }]} art="network" />
+      <section className="overlap" style={{ paddingBottom: "6rem" }}>
         <div className="wrap">
-          <Gallery images={GALLERY} />
+          <div className="white-card">
+            <Gallery images={GALLERY} />
+          </div>
         </div>
       </section>
     </>

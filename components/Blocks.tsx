@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Icon from "./Icon";
 import T from "./T";
+import { PageArt, type ArtVariant } from "./Art";
 import {
+  BANNER,
   CTA_TITLE,
   EMAIL,
   PHONE_1,
@@ -11,29 +13,55 @@ import {
   type Txt,
 } from "@/lib/content";
 
+type Crumb = { label: string; href?: string };
+
 export function PageHero({
   kicker,
   title,
   sub,
+  crumbs,
+  art = "contact",
 }: {
-  kicker: Txt;
+  kicker?: Txt;
   title: Txt;
   sub?: Txt;
+  crumbs: Crumb[];
+  art?: ArtVariant;
 }) {
   return (
     <section className="page-hero">
       <div className="wrap">
-        <p className="eyebrow">
-          <T v={kicker} />
-        </p>
-        <h1>
-          <T v={title} />
-        </h1>
-        {sub && (
-          <p className="lead">
-            <T v={sub} />
-          </p>
-        )}
+        <div>
+          <nav className="crumb" aria-label="Breadcrumb">
+            <Link href="/">Home</Link>
+            {crumbs.map((c, i) => (
+              <span key={c.label}>
+                {" / "}
+                {c.href ? (
+                  <Link href={c.href}>{c.label}</Link>
+                ) : i === crumbs.length - 1 ? (
+                  <span aria-current="page">{c.label}</span>
+                ) : (
+                  c.label
+                )}
+              </span>
+            ))}
+          </nav>
+          {kicker && (
+            <span className="pill light">
+              <T v={kicker} />
+            </span>
+          )}
+          <h1>
+            <T v={title} />
+          </h1>
+          {sub && (
+            <p>
+              <T v={sub} />
+            </p>
+          )}
+        </div>
+        <PageArt variant={art} />
       </div>
     </section>
   );
@@ -44,8 +72,8 @@ export function Cards({ items }: { items: CardItem[] }) {
     <div className="cards">
       {items.map((c, i) => (
         <article className="card" key={i}>
-          <div className="ico">
-            <Icon name={c.icon} />
+          <div className="blob">
+            <Icon name={c.icon} size={38} />
           </div>
           <h3>
             <T v={c.title} />
@@ -53,7 +81,7 @@ export function Cards({ items }: { items: CardItem[] }) {
           <p>
             <T v={c.text} />
           </p>
-          <Link className="btn btn-ghost" href="/enquiry">
+          <Link className="btn btn-soft btn-sm" href="/enquiry">
             Enquire Now
           </Link>
         </article>
@@ -69,42 +97,63 @@ export function Cta() {
         <h2>
           <T v={CTA_TITLE} />
         </h2>
+        <p className="cta-meta">
+          <a href={`tel:${PHONE_1}`}>080-41698199</a> · <a href={`tel:${PHONE_2}`}>+91-98802 71555</a> ·{" "}
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </p>
         <div className="row">
           <Link className="btn btn-accent" href="/contact-us">
             Contact Us
           </Link>
-          <a className="btn btn-light" href={`tel:${PHONE_2}`}>
+          <a className="btn btn-soft" href={`tel:${PHONE_2}`}>
             Call Now
           </a>
         </div>
-        <p className="cta-meta">
-          <a href={`tel:${PHONE_1}`}>080-41698199</a> ·{" "}
-          <a href={`tel:${PHONE_2}`}>+91-98802 71555</a> ·{" "}
-          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-        </p>
       </div>
     </section>
   );
 }
 
+const ART: Record<string, ArtVariant> = {
+  "Computer Hardware": "hardware",
+  "Network Solutions": "network",
+  "Security Systems": "security",
+  Consultation: "consult",
+};
+
 export function ProductPage({ data }: { data: ProductData }) {
   return (
     <>
-      <PageHero kicker={data.kicker} title={data.title} />
-      <section className="section">
-        <div className="wrap narrow">
-          <p className="eyebrow">{data.label}</p>
-          <h2>
-            <T v={data.heading} />
-          </h2>
-          {data.paras.map((p, i) => (
-            <p key={i}>
-              <T v={p} />
-            </p>
-          ))}
+      <PageHero
+        kicker={data.kicker}
+        title={data.title}
+        sub={BANNER}
+        crumbs={[{ label: "Products & Solutions" }, { label: data.title }]}
+        art={ART[data.title]}
+      />
+      <section className="overlap">
+        <div className="wrap">
+          <div className="white-card two">
+            <div>
+              <span className="pill">{data.label.charAt(0) + data.label.slice(1).toLowerCase()}</span>
+              <h2>
+                <T v={data.heading} />
+              </h2>
+            </div>
+            <div>
+              {data.paras.map((p, i) => (
+                <p key={i}>
+                  <T v={p} />
+                </p>
+              ))}
+              <Link className="btn btn-accent" href="/enquiry">
+                Enquire Now
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
-      <section className="section alt">
+      <section className="section after-overlap">
         <div className="wrap">
           <div className="section-head">
             <h2>

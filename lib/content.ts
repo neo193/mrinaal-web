@@ -129,11 +129,11 @@ export const WHY_POINTS: [Txt, Txt][] = [
   ],
 ];
 
-export const STATS: { label: string; value: number | null }[] = [
+export const STATS: { label: string; value: number | null; suffix?: string }[] = [
   { label: "Years of Excellence", value: 23 },
   { label: "Global Clients", value: 200 },
   { label: "Happy Clients", value: 500 },
-  { label: "On-Time Project Completion", value: 99 },
+  { label: "On-Time Project Completion", value: 99, suffix: "%" },
 ];
 
 export const FAQ_TITLE = "Got questions? we've got answers";
@@ -163,6 +163,31 @@ export const FAQ: [Txt, Txt][] = [
     "You can reach us through our contact form, email, or phone. Our team will respond promptly to discuss your needs and provide a free consultation.",
   ],
 ];
+
+// ---------------- Redesign additions (draft copy, see ?drafts) ----------------
+export const HOME_PRODUCTS_INTRO = d(
+  "Complete IT and Security Solutions Under One Roof. From hardware to networking and security, we handle everything—so you don’t have to juggle multiple vendors.",
+);
+export const HOME_CONSULT = {
+  label: "Consultation",
+  href: "/consultation",
+  text: d("IT consulting to help businesses make strategic technology decisions."),
+  icon: "support" as IconName,
+};
+export const DELIVER_TITLE = d("What We Deliver");
+export const WHY_TAGS: Txt[] = [d("End-to-End"), d("On Schedule"), d("Quality")];
+// project photos (indexes into GALLERY) used on the "What sets us apart" cards
+export const WHY_PHOTOS = [2, 26, 32];
+export const STATS_TITLE = d("Numbers that speak");
+export const GALLERY_TEASER = {
+  title: d("Our Project Gallery"),
+  items: [
+    { photo: 7, caption: d("Structured Cabling") },
+    { photo: 19, caption: d("Patch Panels") },
+    { photo: 40, caption: d("Site Installations") },
+  ],
+};
+export const ENQUIRY_FORM_TITLE = d("Tell us what you need");
 
 export const CTA_TITLE = "Every connection we build is a solution empowered.";
 

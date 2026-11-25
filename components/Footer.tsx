@@ -9,10 +9,10 @@ export default function Footer() {
       <footer className="site-footer">
         <div className="wrap grid">
           <div>
-            <Link className="brand light" href="/">
+            <Link className="brand" href="/" aria-label="Mrinaal Technologies home">
               <Image src={LOGO} alt="Mrinaal Technologies" width={180} height={100} />
             </Link>
-            <p>{FOOTER_TAGLINE}</p>
+            <p className="tag">{FOOTER_TAGLINE}</p>
           </div>
           <div>
             <h3>Quick Links</h3>
@@ -32,14 +32,14 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-          <div>
+          <div className="contact">
             <h3>Contact us</h3>
-            <p><Icon name="pin" size={16} /> {ADDRESS}</p>
-            <p>
-              <Icon name="phone" size={16} />
+            <p><Icon name="pin" size={18} /> <span>{ADDRESS}</span></p>
+            <p className="phones">
+              <Icon name="phone" size={18} />
               <span><a href={`tel:${PHONE_1}`}>080-41698199</a> | <a href={`tel:${PHONE_2}`}>+91-98802 71555</a></span>
             </p>
-            <p><Icon name="mail" size={16} /> <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+            <p><Icon name="mail" size={18} /> <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
           </div>
         </div>
         <div className="wrap legal">{COPYRIGHT}</div>

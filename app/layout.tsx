@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { DraftToggle } from "@/components/ClientBits";
 import { BANNER, LOGO } from "@/lib/content";
+
+const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], variable: "--font-outfit", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Mrinaal Technologies", template: "%s – Mrinaal Technologies" },
@@ -21,7 +24,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={outfit.variable}>
       <body>
         <a className="skip" href="#main">Skip to content</a>
         <Header />
