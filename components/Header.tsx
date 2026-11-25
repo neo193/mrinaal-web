@@ -4,8 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import Icon from "./Icon";
-import { EMAIL, LOGO, PHONE_1, PHONE_2, PRODUCTS } from "@/lib/content";
+import { LOGO, PRODUCTS } from "@/lib/content";
 
 const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, "") : p);
 
@@ -16,25 +15,32 @@ export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const subRef = useRef<HTMLLIElement>(null);
 
-  const setHdr = () => {
-    if (headerRef.current)
-      document.documentElement.style.setProperty("--hdr", headerRef.current.offsetHeight + "px");
-  };
-
   useEffect(() => {
+    const setHdr = () => {
+      if (headerRef.current)
+        document.documentElement.style.setProperty("--hdr", headerRef.current.offsetHeight + "px");
+    };
     setHdr();
     window.addEventListener("resize", setHdr);
     const onDoc = (e: MouseEvent) => {
-      if (subRef.current && !subRef.current.contains(e.target as Node) && window.innerWidth > 960) setSub(false);
+      if (subRef.current && !subRef.current.contains(e.target as Node) && window.innerWidth > 1020) setSub(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSub(false);
+        setOpen(false);
+      }
     };
     document.addEventListener("click", onDoc);
+    document.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("resize", setHdr);
       document.removeEventListener("click", onDoc);
+      document.removeEventListener("keydown", onKey);
     };
   }, []);
 
-  // close menu on navigation
+  // close menus on navigation
   useEffect(() => {
     setOpen(false);
     setSub(false);
@@ -52,15 +58,8 @@ export default function Header() {
 
   return (
     <header className="site-header" ref={headerRef}>
-      <div className="topbar">
-        <div className="wrap">
-          <a href={`tel:${PHONE_1}`}><Icon name="phone" size={14} /> 080-41698199</a>
-          <a href={`tel:${PHONE_2}`}>+91-98802 71555</a>
-          <a href={`mailto:${EMAIL}`}><Icon name="mail" size={14} /> {EMAIL}</a>
-        </div>
-      </div>
       <div className="wrap bar">
-        <Link className="brand" href="/">
+        <Link className="brand" href="/" aria-label="Mrinaal Technologies home">
           <Image src={LOGO} alt="Mrinaal Technologies" width={180} height={100} priority />
         </Link>
         <button
@@ -90,10 +89,9 @@ export default function Header() {
               </ul>
             </li>
             <li><Link href="/gallery" {...cur("/gallery")}>Gallery</Link></li>
-            <li><Link href="/enquiry" {...cur("/enquiry")}>Enquiry</Link></li>
             <li><Link href="/contact-us" {...cur("/contact-us")}>Contact Us</Link></li>
           </ul>
-          <Link className="btn btn-accent nav-cta" href="/enquiry">Enquire Now</Link>
+          <Link className="btn btn-soft nav-cta" href="/enquiry" {...cur("/enquiry")}>Enquire Now</Link>
         </nav>
       </div>
     </header>
