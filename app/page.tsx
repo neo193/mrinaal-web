@@ -153,7 +153,7 @@ export default function Home() {
           <div className="section-head"><span className="pill">FAQ</span><h2>{FAQ_TITLE}</h2></div>
           <div className="faq-grid">
             {FAQ.map(([q, a], i) => (
-              <details className="faq" key={i} open={i < 2}>
+              <details className="faq" key={i}>
                 <summary><T v={q} /></summary>
                 <p><T v={a} /></p>
               </details>
